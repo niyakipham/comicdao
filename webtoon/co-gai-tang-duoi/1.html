@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Nội Dung Bảo Mật & Media Đa Năng v2.1</title> <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script> <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<style>
+/* === ROOT VARIABLES === */
+:root{--primary:#00f7ff;--secondary:#6e00ff;--accent:#ff00aa;--error:#ff3d71;--success:#00ff88;--warning:#ffcc00;--bg-dark:#0a0a20;--bg-darker:#050510;--bg-light:rgba(20,20,50,.5);--bg-lighter:rgba(30,30,70,.3);--text-light:#e0e0ff;--text-lighter:#fff;--text-dim:rgba(224,224,255,.6);--border-radius:12px;--box-shadow:0 0 30px rgba(0,247,255,.2);--transition:all .4s cubic-bezier(.175,.885,.32,1.275);--iframe-border:rgba(0,247,255,.3);--iframe-bg:rgba(10,10,32,.7);--md-border:rgba(110,0,255,.25);--code-bg:rgba(0,10,30,.8);--expired-color:var(--error);--expired-bg:rgba(255,61,113,.1)}
+/* === BASE STYLES === */
+*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:var(--bg-dark);color:var(--text-light);min-height:100vh;overflow-x:hidden;line-height:1.6;position:relative;display:flex;align-items:center; /* Default center alignment */ justify-content:center;padding:2rem 1rem}
+/* === BACKGROUND EFFECTS === */
+.particles-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden; pointer-events: none;}
+.particle{position:absolute;background:radial-gradient(circle,var(--primary) 0%,transparent 70%);border-radius:50%;opacity:.6;animation:particle-anim linear infinite} @keyframes particle-anim{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:.6}100%{transform:translateY(-1500px) rotate(720deg);opacity:0}}
+.grid-overlay,.scanlines,.glow-effect{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.grid-overlay{background-image:linear-gradient(rgba(110,0,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(110,0,255,.05) 1px,transparent 1px);background-size:40px 40px}
+.scanlines{background:repeating-linear-gradient(0deg,rgba(0,247,255,.03),rgba(0,247,255,.03) 1px,transparent 1px,transparent 3px);animation:scanline 8s linear infinite} @keyframes scanline{0%{background-position:0 0}100%{background-position:0 100%}}
+.glow-effect{background:radial-gradient(circle at center,rgba(0,247,255,.05) 0%,transparent 70%);animation:pulse 8s infinite alternate} @keyframes pulse{0%{opacity:.3;transform:scale(.95)}100%{opacity:.7;transform:scale(1.05)}}
+/* === TARGET PAGE CONTAINER === */
+.container{max-width:1000px; width:100%;margin:auto; /* Changed margin for centering */ padding:2rem 2.5rem 3rem 2.5rem;background:rgba(10,10,32,.9);backdrop-filter:blur(12px);border-radius:var(--border-radius);box-shadow:var(--box-shadow);border:1px solid rgba(110,0,255,.3);position:relative;overflow:visible;transition:var(--transition);animation:floatTarget 7s ease-in-out infinite}
+@keyframes floatTarget{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.container::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(0,247,255,.1) 0%,transparent 60%);z-index:-1;animation:pulse 15s infinite alternate}
+/* === PASSWORD SECTION === */
+.page-title{text-align:center;color:var(--primary);margin-bottom:2rem;font-weight:300;letter-spacing:2px;text-transform:uppercase;font-size:1.6rem;text-shadow:0 0 15px rgba(0,247,255,.5);position:relative;padding-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:.7rem}.page-title .material-icons{font-size:2rem}.page-title::after{content:'';position:absolute;bottom:0;left:30%;width:40%;height:2px;background:linear-gradient(90deg,transparent,var(--primary),transparent)}
+.final-page-password-form{display:flex;flex-direction:column;gap:1.5rem;margin-top:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+#final-password-section{transition:opacity .5s ease,transform .5s ease,padding .6s ease,margin .6s ease,visibility 0s linear .6s; overflow:hidden;visibility:visible;padding:1rem 0;margin-bottom:2rem;}
+#final-password-section.hidden{display: none !important;} /* Simple hide for admin */
+#final-password-section.hiding{opacity:0;transform:scale(.9);pointer-events:none; padding-top:0;padding-bottom:0;margin-bottom:0;visibility:hidden; transition-delay: 0s !important;}
+.final-page-input-group label{display:flex;align-items:center;gap:.5rem;margin-bottom:.5rem;color:var(--text-light);font-size:.9rem;letter-spacing:1px;text-transform:uppercase}.final-page-input-group label .material-icons{color:var(--secondary);font-size:1.2rem}
+.final-page-input-group input[type=password]{width:100%;padding:1rem 1.5rem;background:var(--bg-light);border:1px solid rgba(110,0,255,.5);border-radius:var(--border-radius);color:var(--text-light);font-size:1.1rem;transition:var(--transition);outline:none;letter-spacing:3px;font-family:'Courier New',Courier,monospace}.final-page-input-group input[type=password]:focus{border-color:var(--primary);box-shadow:0 0 15px rgba(0,247,255,.5);transform:translateY(-2px)}
+.final-page-button{background:linear-gradient(135deg,var(--secondary),var(--primary));color:#fff;border:none;padding:1rem;border-radius:var(--border-radius);cursor:pointer;font-size:1rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;transition:var(--transition);box-shadow:0 4px 20px rgba(110,0,255,.4);position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:.5rem}.final-page-button:hover:not(:disabled){transform:translateY(-3px) scale(1.03);box-shadow:0 6px 25px rgba(0,247,255,.6)}.final-page-button:disabled{filter:grayscale(70%);opacity:.6;cursor:not-allowed;box-shadow:none;transform:none!important}.final-page-button::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(to bottom right,rgba(255,255,255,0) 0%,rgba(255,255,255,.1) 50%,rgba(255,255,255,0) 100%);transform:rotate(45deg);animation:shine 3s infinite linear;opacity:.5; pointer-events: none;}@keyframes shine{0%{transform:translateX(-150%) rotate(45deg)}100%{transform:translateX(150%) rotate(45deg)}}
+.final-page-error-message{color:var(--error);text-align:center;margin-top:.5rem;margin-bottom:-.5rem;font-size:.95rem;min-height:2.5rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.4rem;opacity:0;transition:opacity .3s ease, max-height 0.3s ease;padding:.5rem .8rem;background:rgba(255,61,113,.1);border-left:3px solid var(--error);border-radius:4px;line-height:1.4;overflow: hidden; max-height: 0;}
+.final-page-error-message.show{opacity:1; max-height: 100px;}
+.final-page-input-group input[type=password].shake{animation:shake-final .5s cubic-bezier(.36,.07,.19,.97) both;border-color:var(--error)}@keyframes shake-final{0%,100%{transform:translateX(0)}10%,30%,50%,70%,90%{transform:translateX(-6px)}20%,40%,60%,80%{transform:translateX(6px)}}
+.final-page-donation-prompt{text-align:center;margin-top:1.5rem;padding:.8rem 1rem;background:rgba(255,204,0,.1);border-left:4px solid var(--warning);border-radius:var(--border-radius);color:var(--warning);font-size:.9rem;line-height:1.5;font-style:italic}.final-page-donation-prompt strong{font-weight:700;color:var(--text-lighter)}
+.final-page-donation-prompt code { background: rgba(0,0,0,0.2); color: var(--primary); padding: 0.1em 0.4em; border-radius: 4px; font-family: 'Consolas', monospace; font-size: 0.9em; margin: 0 0.1em; }
+
+/* === CONTENT SECTION === */
+#final-content-section{opacity:0;visibility:hidden;overflow: hidden;transition: opacity .6s ease-out, visibility 0s linear .6s;position: relative;}
+#final-content-section.visible{opacity:1;visibility:visible;overflow: visible;transition: opacity .6s ease-out .2s, visibility 0s linear 0s;}
+#final-content-section.visible>*{animation:fadeInChild .7s ease-out forwards;opacity:0}
+#final-content-section.visible > #embedded-images-container { animation-delay: .1s; }
+#final-content-section.visible > #final-markdown-content { animation-delay: .3s; }
+#final-content-section.visible > #embedded-iframes-container { animation-delay: .5s; }
+#final-content-section.visible > .footer-note { animation-delay: .7s }
+@keyframes fadeInChild{0%{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* === STYLES FOR MULTIPLE MEDIA === */
+#embedded-images-container {margin-bottom: 2.5rem;display: grid;gap: 1.5rem;grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));}
+#embedded-images-container.layout-grid {display: grid;gap: 1.5rem;grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));}
+@media (min-width: 600px) { #embedded-images-container.layout-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); } }
+@media (min-width: 900px) { #embedded-images-container.layout-grid { grid-template-columns: repeat(3, 1fr); } }
+#embedded-images-container.layout-column {display: flex;flex-direction: column;gap: 1.5rem;align-items: center;}
+#embedded-images-container.layout-column .embedded-image-item {width: 100%;max-width: 600px;}
+#embedded-images-container.layout-comic {display: flex;flex-wrap: wrap;gap: 0;margin-bottom: 2.5rem;}
+#embedded-images-container.layout-comic .embedded-image-item {flex: 1 1 auto;border: none;border-radius: 0;box-shadow: none;margin: 0;overflow: hidden;min-width: 50px;}
+#embedded-images-container.layout-comic .embedded-image-item img {border-radius: 0;cursor: default !important;transition: none;}
+#embedded-images-container.layout-comic .embedded-image-item img:hover {transform: none;filter: none;box-shadow: none;}
+.embedded-image-item {border-radius: var(--border-radius);overflow: hidden;box-shadow: 0 10px 30px rgba(0, 247, 255, 0.15);border: 1px solid var(--iframe-border);position: relative;background-color: var(--bg-lighter);transition: var(--transition);}
+.embedded-image-item img {display: block;width: 100%;height: auto;border-radius: calc(var(--border-radius) - 1px);opacity: 0;transition: opacity .5s ease-in .1s, transform .3s ease;cursor: pointer;}
+.embedded-image-item img.loaded { opacity: 1; }
+.embedded-image-item img:hover {transform: scale(1.05);filter: brightness(1.1);box-shadow: 0 5px 15px rgba(0, 247, 255, 0.3);}
+.media-error-message { padding: 1.5rem; text-align: center; color: var(--error); font-size: 1rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: .5rem; min-height: 100px; background-color: rgba(255, 61, 113, 0.1); } .media-error-message .material-icons { font-size: 1.5rem; }
+#embedded-iframes-container {margin-top: 3rem; display: grid; gap: 2rem; grid-template-columns: 1fr; }
+@media (min-width: 900px) {#embedded-iframes-container { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); }}
+.iframe-item-wrapper { border: 1px solid var(--iframe-border); border-radius: var(--border-radius); overflow: hidden; background-color: var(--iframe-bg); box-shadow: 0 10px 30px rgba(0, 247, 255, 0.2); position: relative; width: 100%; padding-top: 56.25%; transition: var(--transition); }
+.iframe-item-wrapper:hover { box-shadow: 0 12px 40px rgba(0, 247, 255, 0.35); transform: translateY(-5px); }
+.iframe-item-wrapper iframe {position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; border-radius: calc(var(--border-radius) - 1px); }
+
+/* === MARKDOWN STYLES === */
+.final-template-styles{line-height:1.75;color:var(--text-light);max-width:100%;margin-bottom:3rem}.final-template-styles>:first-child{margin-top:0!important}.final-template-styles>:last-child{margin-bottom:0!important}.final-template-styles h1,.final-template-styles h2,.final-template-styles h3,.final-template-styles h4,.final-template-styles h5,.final-template-styles h6{color:var(--primary);margin-top:2rem;margin-bottom:1rem;font-weight:400;letter-spacing:1px;padding-bottom:.6rem;border-bottom:1px solid var(--md-border);position:relative;text-shadow:0 0 8px rgba(0,247,255,.2)}.final-template-styles h1::after,.final-template-styles h2::after{content:'';position:absolute;bottom:-1px;left:0;height:3px;width:80px;background:linear-gradient(90deg,var(--accent),var(--secondary));border-radius:3px;transition:width .4s ease-in-out}.final-template-styles h1:hover::after,.final-template-styles h2:hover::after{width:120px}.final-template-styles h1{font-size:2.1rem;letter-spacing:1.5px}.final-template-styles h2{font-size:1.7rem;color:var(--accent)}.final-template-styles h3{font-size:1.4rem;color:var(--success);border-bottom-style:dashed}.final-template-styles h4{font-size:1.2rem;color:var(--warning);border:none;padding-bottom:0;margin-bottom:.5rem;font-weight:500}.final-template-styles h5,.final-template-styles h6{font-size:1.1rem;color:var(--text-dim);font-weight:600;border:none;padding-bottom:0;margin-bottom:.5rem;text-transform:uppercase}.final-template-styles p{margin-bottom:1.1rem;font-size:1.05rem}.final-template-styles a{color:var(--accent);text-decoration:none;position:relative;padding-bottom:2px;transition:color .3s ease,text-shadow .3s ease;font-weight:600;overflow:hidden;display:inline-block}.final-template-styles a::after{content:'';position:absolute;bottom:-2px;left:0;width:100%;height:2px;background:var(--primary);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.19,1,.22,1)}.final-template-styles a:hover{color:var(--primary);text-shadow:0 0 10px var(--primary)}.final-template-styles a:hover::after{transform:scaleX(1)}.final-template-styles ol,.final-template-styles ul{margin-left:1.5rem;margin-bottom:1.1rem;padding-left:1.8rem;list-style:none}.final-template-styles li{margin-bottom:.6rem;position:relative;padding-left:.5rem}.final-template-styles ul li::before{content:'✨';color:var(--primary);font-weight:400;display:inline-block;width:1em;margin-left:-1.5em;font-size:1.2em;line-height:1;position:absolute;top:.25em;left:0;text-shadow:0 0 6px var(--primary);transition:transform .3s ease}.final-template-styles ul li:hover::before{transform:rotate(90deg) scale(1.2)}.final-template-styles ol{counter-reset:list-counter}.final-template-styles ol li{counter-increment:list-counter}.final-template-styles ol li::before{content:counter(list-counter);color:var(--secondary);font-weight:700;font-size:.85em;font-family:'Georgia',serif;display:inline-flex;align-items:center;justify-content:center;width:1.8em;height:1.8em;margin-left:-1.8em;margin-right:.5em;background-color:rgba(110,0,255,.15);border-radius:50%;border:1px solid var(--secondary);position:absolute;top:.15em;left:0;line-height:1.8em;box-shadow:0 0 5px rgba(110,0,255,.3);transition:background-color .3s ease,transform .3s ease}.final-template-styles ol li:hover::before{background-color:rgba(110,0,255,.4);transform:scale(1.1)}.final-template-styles li p{margin-bottom:.3rem}.final-template-styles blockquote{position:relative;border:none;border-left:6px solid;border-image:linear-gradient(to bottom,var(--secondary),var(--primary)) 1;padding:1.5rem 2rem 1.5rem 3.5rem;margin:2rem 0;background:linear-gradient(135deg,rgba(110,0,255,.08),rgba(110,0,255,.2));border-radius:0 var(--border-radius) var(--border-radius) 0;font-style:italic;font-size:1.1em;color:var(--text-lighter);box-shadow:inset 5px 0 15px -5px rgba(110,0,255,.4);backdrop-filter:blur(2px)}.final-template-styles blockquote::before{content:'format_quote';font-family:'Material Icons';font-size:3rem;color:var(--secondary);opacity:.5;position:absolute;left:.8rem;top:.5rem;transform:translateY(-10%)}.final-template-styles blockquote p{margin-bottom:.6rem;font-size:1em}.final-template-styles blockquote p:last-child{margin-bottom:0}.final-template-styles code:not(pre code){background:rgba(0,247,255,.1);color:var(--primary);padding:.3em .6em;border-radius:5px;font-family:'Fira Code','Consolas',monospace;font-size:.9em;border:1px solid rgba(0,247,255,.3);word-break:break-word;text-shadow:0 0 3px rgba(0,247,255,.5)}.final-template-styles pre{background:var(--code-bg);padding:1.5rem 1.8rem;border-radius:var(--border-radius);overflow-x:auto;margin:2rem 0;border:1px solid var(--secondary);box-shadow:0 0 25px rgba(110,0,255,.25),inset 0 0 15px rgba(0,0,0,.6);position:relative}.final-template-styles pre code{background:0 0;padding:0;font-size:.95em;line-height:1.65;color:var(--text-light);font-family:'Fira Code','Consolas','Monaco',monospace}.final-template-styles pre::-webkit-scrollbar{height:8px;background-color:rgba(0,0,0,.2)}.final-template-styles pre::-webkit-scrollbar-thumb{background:linear-gradient(90deg,var(--secondary),var(--primary));border-radius:4px}.final-template-styles hr{border:0;height:2px;margin:3rem auto;width:70%;background:linear-gradient(90deg,transparent,var(--secondary) 20%,var(--primary) 80%,transparent);opacity:.6}.final-template-styles table{width:100%;border-collapse:separate;border-spacing:0;margin:2rem 0;background:0 0;border:1px solid var(--md-border);border-radius:var(--border-radius);box-shadow:0 8px 25px rgba(0,0,0,.4);overflow:hidden}.final-template-styles td,.final-template-styles th{border-bottom:1px solid var(--md-border);padding:1rem 1.2rem;text-align:left;transition:background-color .3s ease}.final-template-styles td{background-color:rgba(10,10,32,.5)}.final-template-styles tr:last-child td{border-bottom:none}.final-template-styles th{background:linear-gradient(135deg,rgba(110,0,255,.3),rgba(0,247,255,.3));color:var(--text-lighter);font-weight:700;text-transform:uppercase;font-size:.9em;letter-spacing:1px;border-bottom:2px solid var(--primary)}.final-template-styles td:first-child,.final-template-styles th:first-child{padding-left:1.5rem}.final-template-styles td:last-child,.final-template-styles th:last-child{padding-right:1.5rem}.final-template-styles tr:hover td{background-color:var(--bg-lighter);color:var(--text-lighter)}
+.final-template-styles img{max-width:100%;height:auto;border-radius:8px;margin:1.5rem 0;box-shadow:0 8px 25px rgba(0,0,0,.4);border:1px solid var(--iframe-border);display:block;background:var(--bg-lighter);transition:transform .3s ease,box-shadow .3s ease,filter .3s ease}.final-template-styles img:hover{transform:scale(1.03);box-shadow:0 12px 40px rgba(0,247,255,.25);filter:brightness(1.1)}
+
+/* === MODAL STYLE === */
+.modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(5,5,16,.9);backdrop-filter:blur(10px);z-index:1000;display:flex;justify-content:center;align-items:center;opacity:0;transition:opacity .5s ease;pointer-events:none}.modal-overlay.hidden{display:none!important}.modal-overlay:not(.hidden){opacity:1;pointer-events:auto}
+.modal-content{background:var(--bg-dark);border:1px solid var(--secondary);border-radius:var(--border-radius);padding:2.5rem;max-width:600px;width:90%;box-shadow:0 0 50px rgba(110,0,255,.35);position:relative;animation:scaleInModal .5s cubic-bezier(.175,.885,.32,1.275);transform:scale(1)}.modal-overlay:not(.hidden).initial-state .modal-content{transform:scale(.9);opacity:0}@keyframes scaleInModal{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{color:var(--primary);text-align:center;margin-bottom:1.5rem;font-size:1.5rem;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:.5rem}.modal-title .material-icons{font-size:1.8rem; color: var(--primary)}
+.modal-message{color:var(--text-light);margin-bottom:2rem;line-height:1.7;font-size:1.1rem;text-align:center}.modal-message p{margin-bottom:1rem}.modal-message strong{color:var(--warning)}
+.modal-button{border:none;padding:1rem;border-radius:var(--border-radius);cursor:pointer;font-size:1rem;font-weight:700;width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;transition:var(--transition)}
+#final-warning-confirm { background: linear-gradient(135deg, var(--error), #ff6b8b); color: white; box-shadow: 0 4px 15px rgba(255, 61, 113, 0.4); }
+#final-warning-confirm:hover:not(:disabled) { box-shadow: 0 6px 25px rgba(255, 61, 113, 0.6); transform: translateY(-3px) scale(1.03); }
+#huan-error-confirm { background: linear-gradient(135deg, var(--warning), #ffd54f); color: var(--bg-darker); box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4); }
+#huan-error-confirm:hover:not(:disabled) { box-shadow: 0 6px 25px rgba(255, 204, 0, 0.6); transform: translateY(-3px) scale(1.03); }
+/* === MISC & FOOTER === */
+.hidden{display:none!important;visibility:hidden}.text-center{text-align:center}
+.footer-note{text-align:center;margin-top:3rem;font-size:.9rem;color:var(--text-dim);opacity:.8;letter-spacing:.5px}.footer-note .material-icons{font-size:1rem;vertical-align:middle;margin-right:.2rem}
+.spin{animation:spin 1s linear infinite}@keyframes spin{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}
+
+/* === Expiration Message Style (Moved Outside Container) === */
+ #expiration-message{
+    display:none; /* Hidden by default */
+    padding:2rem 1.5rem; margin: 1rem; border-radius:var(--border-radius);
+    background-color:var(--expired-bg); border:1px solid var(--expired-color);
+    box-shadow:0 0 20px rgba(255,61,113,.3); text-align:center; color:var(--expired-color);
+    font-size:1.3rem; font-weight:700; line-height:1.6; max-width:600px;
+    width: calc(100% - 2rem); animation:fadeInExpired .8s ease-out;
+    position:relative; /* Ensure it's above background effects */ z-index: 1;
+ }
+ #expiration-message .material-icons{font-size:3rem;display:block;margin-bottom:1rem;color:var(--expired-color)}
+ @keyframes fadeInExpired{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+ /* Hide container when expired message is shown */
+ body.expired .container { display: none !important; }
+ /* Ensure expiration message is shown correctly */
+ body.expired #expiration-message { display: block; /* Or flex if needed */ }
+ /* Ensure body alignment works for expiration message */
+ body.expired { align-items: center; justify-content: center; }
+
+/* === RESPONSIVE OVERRIDES === */
+@media (max-width:768px){body{padding:1rem}.container{padding:1.5rem;margin:auto}.final-page-password-form{max-width:100%}.page-title{font-size:1.4rem}.final-template-styles h1{font-size:1.8rem}.final-template-styles h2{font-size:1.5rem}.final-template-styles blockquote{padding:1rem 1.5rem 1rem 2.5rem}.final-template-styles blockquote::before{left:.5rem;font-size:2.5rem}.final-template-styles pre{padding:1.2rem}.final-template-styles td,.final-template-styles th{padding:.8rem 1rem}.modal-content{padding:1.5rem;max-width:95%}.modal-title{font-size:1.3rem}.modal-message{font-size:1rem}
+    #embedded-images-container { gap: 1rem; margin-bottom: 1.5rem; }
+    #embedded-images-container.layout-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+    #embedded-images-container.layout-column { gap: 1rem; }
+    #embedded-iframes-container { margin-top: 2rem; gap: 1.5rem; }
+    #expiration-message { font-size: 1.1rem; padding: 1.5rem 1rem;} #expiration-message .material-icons { font-size: 2.5rem; }}
+@media (max-width:480px){.final-page-password-form{gap:1.2rem}.final-page-input-group input[type=password]{padding:.8rem 1rem;font-size:1rem}.page-title{font-size:1.3rem}.modal-title{font-size:1.2rem}.modal-message{font-size:.95rem;line-height:1.6}.final-template-styles h1{font-size:1.6rem}.final-template-styles h2{font-size:1.3rem}.final-template-styles h3{font-size:1.2rem}.final-template-styles code:not(pre code){font-size:.85em}.final-template-styles pre code{font-size:.9em}.final-template-styles table{font-size:.9rem}.final-template-styles td,.final-template-styles th{padding:.6rem .8rem}
+    #embedded-images-container.layout-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+    #expiration-message { font-size: 1rem; }
+}
+</style>
+</head>
+<body id="target-body">
+    <div class="particles-container" id="final-particles"></div> <div class="grid-overlay"></div> <div class="scanlines"></div> <div class="glow-effect"></div>
+
+    <!-- Expiration Message (Moved Outside Container) -->
+    <div id="expiration-message">
+        <i class="material-icons">sentiment_very_dissatisfied</i>
+        Ôi không, vận may của bạn đã hết. File đã hết hạn rùi!!!
+    </div>
+
+    <div class="container">
+        <!-- Password Input Section -->
+        <div id="final-password-section">
+            <h1 class="page-title"><i class="material-icons">lock_person</i> Truy Cập Nội Dung</h1>
+            <form class="final-page-password-form" id="password-form" onsubmit="checkFinalPagePassword(event); return false;">
+                <div class="final-page-input-group">
+                    <label for="final-password-input"><i class="material-icons">password</i> Mã Truy Cập:</label>
+                    <input type="password" id="final-password-input" placeholder="••••••••••••" autocomplete="current-password" required>
+                </div>
+                <div class="final-page-donation-prompt">🤫 Quên mật khẩu? Đôn nết nhẹ <strong>10K</strong> vào Momo/ZaloPay <strong>0901574726</strong>, nhắn vấn đề và tớ sẽ cố gắng giúp! 😉<br></div>
+                <button type="submit" class="final-page-button" id="final-submit-btn">
+                    <i class="material-icons">sensors</i> Giải Mã & Hiển Thị
+                </button>
+                <div class="final-page-error-message" id="final-error-message"></div>
+            </form>
+        </div>
+        <!-- Content Display Section -->
+        <div id="final-content-section">
+            <div id="embedded-images-container"></div>
+            <div class="final-template-styles" id="final-markdown-content"></div>
+            <div id="embedded-iframes-container"></div>
+            <div class="footer-note"><i class="material-icons">verified_user</i> An toàn với 10 lớp mã hóa AES.</div>
+        </div>
+    </div>
+    <!-- Modals -->
+    <div class="modal-overlay hidden initial-state" id="final-warning-modal">
+         <div class="modal-content">
+             <h2 class="modal-title"><i class="material-icons">gpp_bad</i> CẢNH BÁO</h2>
+             <div class="modal-message"> <p>Truy cập vào vùng dữ liệu mã hóa cao.</p> <p>Mọi hành vi trái phép đều có thể bị ghi nhận.</p> <p><strong>Luôn bảo mật thông tin!</strong></p> </div>
+             <button class="modal-button" id="final-warning-confirm"> <i class="material-icons">check_circle_outline</i> TÔI ĐÃ HIỂU </button>
+        </div>
+    </div>
+    <div class="modal-overlay hidden initial-state" id="huan-error-modal">
+         <div class="modal-content">
+            <h2 class="modal-title" style="color: var(--warning);"><i class="material-icons">sentiment_very_dissatisfied</i> Sai Rồi Fen!</h2>
+            <div class="modal-message" style="font-style: italic;"> <p>Sau nay, chỉ có làm chịu khó cần cù thì bù siêng năng,... Cái loại xem chùa mà đòi free thì ăn cám<br><strong style="font-style:normal;font-weight:bold;font-size:1.1em;">| -_- |</strong></p> </div>
+            <button class="modal-button" id="huan-error-confirm"> <i class="material-icons">refresh</i> THỬ LẠI ĐI </button>
+        </div>
+    </div>
+
+    <script>
+        // === TARGET PAGE SCRIPT (REVISED with Admin Unlock & Expiry Fix) ===
+        const encryptedMarkdownContent = `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`;
+        const imageLayout = `comic`;
+        const embeddedImageUrls = ["https://antentruyen.com/wp-content/uploads/2022/09/1-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/2-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/3-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/4-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/5-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/6-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/7-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/8-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/9-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/10-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/11-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/12-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/13-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/14-8.jpg","https://antentruyen.com/wp-content/uploads/2022/09/15-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/16-7.jpg","https://antentruyen.com/wp-content/uploads/2022/09/17-5.jpg","https://antentruyen.com/wp-content/uploads/2022/09/18-5.jpg","https://antentruyen.com/wp-content/uploads/2022/09/19-5.jpg"];
+        const embeddedIframeUrls = [];
+        const expiryDetails = null;
+        const adminEncodedPass = 'YWRtaW4xMjM='; // Encoded password for admin use
+
+        // Elements
+        const targetBody = document.getElementById('target-body');
+        const expirationMessageDiv = document.getElementById('expiration-message');
+        const pageContainer = document.querySelector('.container'); // Get container
+        const finalPasswordSection=document.getElementById('final-password-section');
+        const finalContentSection=document.getElementById('final-content-section');
+        const finalPasswordInput=document.getElementById('final-password-input');
+        const finalErrorMessage=document.getElementById('final-error-message');
+        const finalImagesContainer=document.getElementById('embedded-images-container');
+        const finalMarkdownContentDiv=document.getElementById('final-markdown-content');
+        const finalIframesContainer=document.getElementById('embedded-iframes-container');
+        const finalWarningModal=document.getElementById('final-warning-modal');
+        const finalWarningConfirmBtn=document.getElementById('final-warning-confirm');
+        const huanErrorModal=document.getElementById('huan-error-modal');
+        const huanErrorConfirmBtn=document.getElementById('huan-error-confirm');
+        const finalParticlesContainer=document.getElementById('final-particles'); // Keep using the generator ID
+        const submitButton=document.getElementById('final-submit-btn');
+        let errorTimeout = null;
+
+        // Particles Function
+        function createFinalParticles(){ const cont = document.getElementById('final-particles'); if(!cont||cont.children.length>40&&Math.random()<.9)return;cont.innerHTML='';const n=window.innerWidth>768?120:60;for(let i=0;i<n;i++){const p=document.createElement('div');p.classList.add('particle');const s=Math.random()*4+1;const x=Math.random()*window.innerWidth;const d=Math.random()*12;const u=Math.random()*18+12;const o=Math.random()*.4+.1;Object.assign(p.style,{width:`${s}px`,height:`${s}px`,left:`${x}px`,bottom:`-${s}px`,animationDuration:`${u}s`,animationDelay:`${d}s`,opacity:o});const c=['#00f7ff','#6e00ff','#ff00aa'][Math.floor(Math.random()*3)];p.style.background=`radial-gradient(circle, ${c} 0%, transparent 70%)`;cont.appendChild(p)}}
+
+        // Decryption Function
+        function multiLayerDecrypt(encryptedBase64Data, password, layers = 10) {
+            if (typeof CryptoJS === 'undefined') throw new Error("Lỗi: Không tìm thấy CryptoJS.");
+            let currentData = encryptedBase64Data;
+            try {
+                for (let i = layers - 1; i >= 0; i--) {
+                    const layerKey = password + i; let decryptedBytes;
+                    try { decryptedBytes = CryptoJS.AES.decrypt(currentData, layerKey); } catch (e){ throw new Error('decrypt-fail');}
+                    let decryptedUtf8;
+                    try { decryptedUtf8 = decryptedBytes.toString(CryptoJS.enc.Utf8); } catch (e){ throw new Error('decrypt-fail');}
+                    if (!decryptedUtf8 && i > 0) { throw new Error('decrypt-fail'); }
+                    if (!decryptedUtf8 && i === 0 && encryptedBase64Data !== "") { /* Allow empty */ }
+                    if (decryptedUtf8) {
+                        const parts = decryptedUtf8.split("|");
+                        if (parts.length < 3 || parts[parts.length - 2] !== password || parseInt(parts[parts.length - 1], 10) !== i) { throw new Error('decrypt-fail'); }
+                        currentData = parts.slice(0, parts.length - 2).join('|');
+                    } else { currentData = ""; }
+                } return currentData;
+            } catch (e) { if (e.message !== 'decrypt-fail') { console.error("Lỗi giải mã:", e); } throw new Error('decrypt-fail'); }
+        }
+
+        // Error Display Functions
+        function showInlineError(message){ clearTimeout(errorTimeout); finalErrorMessage.innerHTML = `<i class="material-icons">error</i> ${message||'Lỗi không xác định'}`; finalErrorMessage.classList.add('show'); if(finalPasswordInput){finalPasswordInput.classList.add('shake'); setTimeout(()=> finalPasswordInput.classList.remove('shake'), 500);} errorTimeout = setTimeout(() => { finalErrorMessage.classList.remove('show'); }, 3500); }
+        function showHuanModal() { if(!huanErrorModal) return; huanErrorModal.classList.add('initial-state'); huanErrorModal.classList.remove('hidden'); requestAnimationFrame(()=>{huanErrorModal.classList.remove('initial-state')}); }
+        function isValidUrl(string) { if (!string) return false; try { new URL(string); return string.startsWith('http:') || string.startsWith('https:') || string.startsWith('data:'); } catch (_) { return false; } }
+
+        // Base64 Decode Helper
+        function decodeBase64Multi(encodedString, layers = 1) {
+            let currentData = encodedString;
+            try { for (let i = 0; i < layers; i++) { currentData = atob(currentData); } return currentData; }
+            catch (e) { console.warn('Base64 decoding failed:', e); return null; }
+        }
+        // Check if Admin View is active
+        function isAdminViewActive() {
+            const urlParams = new URLSearchParams(window.location.search); const viewParam = urlParams.get('view');
+            if (!viewParam) { return false; }
+            const decodedAdmin = decodeBase64Multi(viewParam, 3); return decodedAdmin === 'admin';
+        }
+        // Check Expiration Status
+        function isExpired() {
+            if (!expiryDetails) { return false; }
+            try { const expiryDate = new Date(expiryDetails.year, expiryDetails.month - 1, expiryDetails.day, expiryDetails.hour, expiryDetails.minute, 0); const now = new Date(); return now > expiryDate; }
+            catch (e) { console.error("Lỗi parse ngày hết hạn:", e); return false; }
+        }
+
+        // NEW: Function to render content (extracted logic)
+        function renderContent(decryptedHtml) {
+            // Render Images
+            finalImagesContainer.innerHTML = ''; finalImagesContainer.className = 'layout-' + imageLayout;
+            if (Array.isArray(embeddedImageUrls) && embeddedImageUrls.length > 0) {
+                 embeddedImageUrls.forEach(url => {
+                    if(isValidUrl(url)) {
+                        const item = document.createElement('div'); item.className = 'embedded-image-item';
+                        const img = document.createElement('img'); img.alt="Ảnh"; img.loading="lazy";
+                        img.onerror = () => { item.innerHTML = '<div class="media-error-message"><i class="material-icons">broken_image</i>Lỗi</div>'; img.classList.add('loaded'); };
+                        img.onload = () => img.classList.add('loaded'); img.src = url;
+                        if (imageLayout !== 'comic') img.onclick = () => window.open(url, '_blank');
+                        item.appendChild(img); finalImagesContainer.appendChild(item);
+                     } else { console.warn("Link ảnh sai:", url); const eItem=document.createElement('div'); eItem.className='embedded-image-item'; eItem.innerHTML='<div class="media-error-message"><i class="material-icons">link_off</i>Link sai</div>'; finalImagesContainer.appendChild(eItem); }
+                });
+            }
+            // Render Markdown
+            finalMarkdownContentDiv.innerHTML = decryptedHtml;
+            // Render Iframes
+            finalIframesContainer.innerHTML = '';
+            if (Array.isArray(embeddedIframeUrls) && embeddedIframeUrls.length > 0) {
+                 embeddedIframeUrls.forEach(url => {
+                     if(isValidUrl(url)) {
+                        const wrap = document.createElement('div'); wrap.className = 'iframe-item-wrapper';
+                        const frame = document.createElement('iframe'); frame.title="Nhúng"; frame.frameborder="0"; frame.allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"; frame.allowfullscreen=true; frame.loading="lazy";
+                        frame.onerror = () => { wrap.innerHTML = '<div class="media-error-message"><i class="material-icons">video_stable</i>Lỗi iframe</div>'; };
+                        wrap.appendChild(frame); finalIframesContainer.appendChild(wrap);
+                        setTimeout(() => { frame.src = url; }, 50);
+                    } else { console.warn("Link iframe sai:", url); const eWrap = document.createElement('div'); eWrap.className = 'iframe-item-wrapper'; eWrap.style.cssText = 'padding-top:0;min-height:100px;'; eWrap.innerHTML='<div class="media-error-message"><i class="material-icons">link_off</i>Link sai</div>'; finalIframesContainer.appendChild(eWrap); }
+                });
+            } else { finalMarkdownContentDiv.style.marginBottom='0'; }
+        }
+
+        // NEW: Function to display content directly as admin
+        function displayContentAsAdmin() {
+            console.log("Chế độ Admin kích hoạt. Bỏ qua mật khẩu & hết hạn.");
+            if (!adminEncodedPass) {
+                console.error("Lỗi: Không tìm thấy mật khẩu admin đã mã hóa.");
+                showInlineError("Lỗi cấu hình Admin: Thiếu khóa.");
+                return;
+            }
+            let adminPassword;
+            try {
+                adminPassword = atob(adminEncodedPass); // Decode Base64 password
+            } catch (e) {
+                console.error("Lỗi giải mã mật khẩu admin:", e);
+                showInlineError("Lỗi cấu hình Admin: Giải mã khóa thất bại.");
+                return;
+            }
+
+            try {
+                const decryptedHtml = multiLayerDecrypt(encryptedMarkdownContent, adminPassword, 10);
+                renderContent(decryptedHtml); // Render using the extracted function
+                finalContentSection.classList.add('visible'); // Show content section
+                // Optional: Scroll into view smoothly
+                setTimeout(() => {
+                    const focusTarget = finalContentSection.querySelector('h1, h2, h3, h4, h5, h6') || finalImagesContainer || finalIframesContainer || finalContentSection;
+                    if (focusTarget && typeof focusTarget.focus === 'function') {
+                        focusTarget.setAttribute('tabindex', '-1');
+                        try { focusTarget.focus({ preventScroll: true }); } catch (e) { /* ignore focus error */ }
+                        window.scrollTo({ top: pageContainer.offsetTop - 20, behavior: 'smooth' });
+                    } else {
+                        window.scrollTo({ top: pageContainer.offsetTop - 20, behavior: 'smooth' });
+                    }
+                }, 200); // Short delay for rendering
+            } catch (e) {
+                console.error("Lỗi giải mã Admin:", e);
+                if (e.message === 'decrypt-fail') {
+                    showInlineError("Lỗi giải mã Admin: Dữ liệu hoặc khóa không khớp.");
+                } else {
+                    showInlineError("Lỗi giải mã Admin không xác định.");
+                }
+                // Ensure content section is hidden on error
+                finalContentSection.classList.remove('visible');
+                finalImagesContainer.innerHTML = ''; finalIframesContainer.innerHTML = ''; finalMarkdownContentDiv.innerHTML = '';
+            }
+        }
+
+        // Password Check (Normal User)
+        function checkFinalPagePassword(event){
+            if(event)event.preventDefault();const enteredPassword=finalPasswordInput.value.trim();
+            finalErrorMessage.classList.remove('show');
+            finalPasswordInput.classList.remove('shake'); clearTimeout(errorTimeout);
+
+            if(!enteredPassword){showInlineError('Chưa nhập mã mà fen!');finalPasswordInput.focus();return}
+            submitButton.disabled=true;submitButton.innerHTML='<i class="material-icons spin">hourglass_top</i> Check pass...';
+
+            setTimeout(()=>{
+                try{
+                    const decryptedHtml = multiLayerDecrypt(encryptedMarkdownContent, enteredPassword, 10);
+                    renderContent(decryptedHtml); // Use extracted render function
+                    finalPasswordSection.classList.add('hiding');
+                    finalContentSection.classList.add('visible');
+                    setTimeout(()=>{ const focusTarget = finalContentSection.querySelector('h1, h2, h3, h4, h5, h6') || finalImagesContainer || finalIframesContainer || finalContentSection; if(focusTarget && typeof focusTarget.focus === 'function') { focusTarget.setAttribute('tabindex', '-1'); try{focusTarget.focus({preventScroll:true});}catch(e){} window.scrollTo({ top: finalContentSection.offsetTop - 20, behavior: 'smooth' }); } }, 700);
+                } catch(e) {
+                     if (e.message === 'decrypt-fail') { showHuanModal(); }
+                     else { showInlineError(e.message || "Lỗi xử lý không xác định."); }
+                     finalPasswordInput.value = '';
+                     finalContentSection.classList.remove('visible');
+                     finalImagesContainer.innerHTML = ''; finalIframesContainer.innerHTML = ''; finalMarkdownContentDiv.innerHTML = '';
+                 } finally {
+                     submitButton.disabled = false;
+                     submitButton.innerHTML='<i class="material-icons">sensors</i> Giải Mã & Hiển Thị';
+                 }
+            }, 150);
+        }
+
+        // Initialization (REVISED LOGIC)
+        document.addEventListener('DOMContentLoaded',()=>{
+            createFinalParticles();
+            finalContentSection.setAttribute('tabindex','-1');
+
+            const isAdmin = isAdminViewActive();
+            const hasExpired = isExpired();
+
+            if (isAdmin) {
+                // --- Admin View Active ---
+                targetBody.classList.remove('expired'); // Ensure not marked expired
+                expirationMessageDiv.style.display = 'none'; // Hide expiration message
+                finalPasswordSection.classList.add('hidden'); // Hide password form immediately
+                displayContentAsAdmin(); // Attempt to display content directly
+            } else if (hasExpired) {
+                // --- Normal View & EXPIRED ---
+                targetBody.classList.add('expired'); // Add class to hide normal content
+                expirationMessageDiv.style.display = 'block'; // Show expiration message
+                pageContainer.style.display = 'none'; // Hide the main container
+                console.warn("Trang đã hết hạn.");
+            } else {
+                // --- Normal View & NOT Expired ---
+                targetBody.classList.remove('expired');
+                expirationMessageDiv.style.display = 'none'; // Ensure expiration message hidden
+                pageContainer.style.display = 'block'; // Ensure main container visible
+                finalPasswordSection.classList.remove('hidden', 'hiding'); // Ensure password form visible
+
+                // Show warning modal or focus password input
+                if(finalWarningModal && finalWarningConfirmBtn){
+                    finalWarningModal.classList.remove('hidden','initial-state');
+                    const wCH = ()=>{ finalWarningModal.classList.add('hidden'); setTimeout(()=>finalPasswordInput.focus(), 100); };
+                    finalWarningConfirmBtn.onclick=wCH;
+                    finalWarningModal.onclick=(e)=>{if(e.target===finalWarningModal) wCH(); };
+                }else{
+                    setTimeout(() => finalPasswordInput.focus(), 100);
+                }
+            }
+
+            // Setup other modals and event listeners (always needed)
+            if(huanErrorModal && huanErrorConfirmBtn){ const hCH=()=>{ huanErrorModal.classList.add('hidden'); setTimeout(()=> finalPasswordInput.focus(), 100); }; huanErrorConfirmBtn.onclick=hCH; huanErrorModal.onclick=(e)=>{ if(e.target===huanErrorModal) hCH(); }; }
+            if (finalPasswordInput) { // Add check if element exists
+                finalPasswordInput.addEventListener('keydown',(e)=>{ if(e.key === 'Enter') { checkFinalPagePassword(e); } });
+            }
+        });
+        let finalResizeTimeout; window.addEventListener('resize',()=>{clearTimeout(finalResizeTimeout);finalResizeTimeout=setTimeout(createFinalParticles,300)});
+
+    </script>
+</body>
+</html>
