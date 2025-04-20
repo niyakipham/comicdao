@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cô gái tầng dưới - Chi Tiết</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
+    :root { /* ... (Keep CSS Variables from previous) ... */
+        --grad-black: #0d020d; --grad-pink: #3d001f; --accent-pink: #ff0080;
+        --accent-hotpink: #ff1493; --grid-color: rgba(255, 20, 147, 0.1);
+        --card-bg: rgba(20, 0, 20, 0.75); --text-light: #f5f5f5; --text-medium: #cccccc;
+        --link-color: #ff80ff; --link-hover: #ffffff; --border-glow: rgba(255, 20, 147, 0.5);
+        --button-bg: linear-gradient(135deg, var(--accent-pink), var(--accent-hotpink));
+        --button-hover-bg: linear-gradient(135deg, var(--accent-hotpink), var(--accent-pink));
+        --shadow-color: rgba(255, 0, 128, 0.5); --heading-font: 'Orbitron', sans-serif; --body-font: 'Roboto', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; } html { scroll-behavior: smooth; }
+    body {
+        font-family: var(--body-font); background-color: var(--grad-black);
+        background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px), radial-gradient(ellipse at top left, var(--grad-pink) 0%, transparent 50%), radial-gradient(ellipse at bottom right, var(--accent-pink) 0%, transparent 60%), linear-gradient(170deg, var(--grad-black) 30%, var(--grad-pink) 100%);
+        background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%, 100% 100%; background-attachment: fixed;
+        color: var(--text-light); line-height: 1.7; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+    }
+    .export-container { width: 100%; max-width: 900px; margin-bottom: 3rem; } /* Holds the stories */
+    .page-title { /* ... (keep styles) ... */
+        font-family: var(--heading-font); color: var(--accent-hotpink); text-align: center; font-size: 2.8rem;
+        margin-bottom: 2.5rem; letter-spacing: 3px; text-shadow: 0 0 10px var(--shadow-color), 0 0 20px var(--shadow-color), 0 0 5px #fff;
+        animation: subtle-flicker 5s infinite alternate;
+    }
+    @keyframes subtle-flicker { /* ... (keep keyframes) ... */
+        0% { opacity: 1; } 49% { opacity: 1; } 50% { opacity: 0.95; } 51% { opacity: 1; } 70% { opacity: 1; } 71% { opacity: 0.98; } 72% { opacity: 1; } 100% { opacity: 1; }
+    }
+    .story-card { /* ... (keep styles) ... */
+        background: var(--card-bg); border-radius: 12px; margin-bottom: 2.5rem; border: 1px solid var(--border-glow);
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4), 0 0 15px var(--shadow-color); backdrop-filter: blur(8px);
+        overflow: hidden; padding: 25px 30px; animation: slideInUp 0.6s ease-out forwards; opacity: 0;
+    }
+    .story-card:nth-child(odd) { animation-delay: 0.1s; } .story-card:nth-child(even) { animation-delay: 0.2s; }
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .story-card-header { /* ... (keep styles) ... */ display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; gap: 1rem; text-align: center; }
+    @media (min-width: 600px) { .story-card-header { flex-direction: row; text-align: left; gap: 1.5rem;} }
+    .story-card-image { /* ... (keep styles) ... */ flex-shrink: 0; width: 120px; height: 180px; }
+    .story-card-image img, .story-card-image .image-placeholder { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; border: 2px solid var(--border-glow); box-shadow: 0 0 8px var(--shadow-color); }
+    .story-card-image .image-placeholder { display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.3); color: var(--text-medium); font-style: italic; border-style: dashed; }
+    .story-card-title { /* ... (keep styles) ... */ font-family: var(--heading-font); font-size: 1.8rem; color: var(--text-light); margin: 0; flex-grow: 1; text-shadow: 0 0 5px var(--shadow-color); }
+    .story-card-description h3, .story-card-chapters h3 { /* ... (keep styles) ... */ font-family: var(--heading-font); font-size: 1.3rem; color: var(--link-color); margin-bottom: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(255, 128, 255, 0.3); text-shadow: 0 0 4px var(--shadow-color); letter-spacing: 1px; }
+    .story-card-description p { color: var(--text-medium); word-break: break-word;}
+    .story-card-chapters { margin-top: 1.5rem; }
+    .story-card-chapters ul { list-style: none; padding: 0; }
+    .story-card-chapters li { margin-bottom: 0.6rem; padding: 0.5rem 0.8rem; background: rgba(255, 255, 255, 0.04); border-radius: 4px; border-left: 3px solid var(--accent-pink); transition: background 0.3s ease; }
+    .story-card-chapters li:hover { background: rgba(255, 255, 255, 0.08); }
+    .story-card-chapters a { color: var(--link-color); font-weight: normal; text-decoration: none; display: block; transition: color 0.3s ease; word-break: break-all; }
+    .story-card-chapters a:hover { color: var(--link-hover); text-decoration: underline; }
+    .no-chapters { font-style: italic; color: var(--text-medium); }
+    /* --- Styles specific to the COPY ACTION button in the BROWSER view --- */
+    .copy-action-wrapper { /* Renamed wrapper */ text-align: center; padding: 20px; position: sticky; bottom: 20px; z-index: 10; }
+    #copy-html-button { /* Button styles remain */
+        font-family: var(--heading-font); padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer;
+        background: var(--button-bg); color: #fff; font-weight: bold; font-size: 1.1rem; letter-spacing: 1px;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4), 0 0 15px var(--shadow-color);
+        backdrop-filter: blur(5px);
+    }
+    #copy-html-button:hover { /* ... (keep styles) ... */ background: var(--button-hover-bg); transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px var(--shadow-color); }
+    #copy-html-button:active { /* ... (keep styles) ... */ transform: translateY(-1px) scale(1); box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3), 0 0 10px var(--shadow-color); }
+    #copy-html-button.copied { background: linear-gradient(135deg, #00cc66, #008040); color: #fff; }
+</style>
+        
+</head>
+<body>
+<div class="export-container"> 
+        <h1 class="page-title">COMIC</h1>
+        
+                <article class="story-card">
+                    <header class="story-card-header"> <div class="story-card-image"><img src="https://hhtq5.vip/wp-content/uploads/2023/07/co-gai-tang-duoi-250x350.jpg" alt="Bìa Cô gái tầng dưới"></div> <h2 class="story-card-title">Cô gái tầng dưới</h2> </header>
+                    <section class="story-card-description"> <h3>Mô Tả</h3> <p>Khi Joon chuyển đến căn hộ mới của mình vào ngày đầu tiên vào đại học, anh không ngờ rằng người nổi tiếng xinh đẹp Duna lại sống ở tầng dưới ...</p> </section>
+                    <section class="story-card-chapters"> <h3>Chương</h3> <ul class="chapter-list"><li><a href="https://niyakipham.is-a.dev/comicdao/webtoon/co-gai-tang-duoi/1?view=V1ZkU2RHRlhORDA9" target="_blank">Chap 1</a></li></ul> </section>
+                 </article>
+    </div>
+</body>
+</html>
